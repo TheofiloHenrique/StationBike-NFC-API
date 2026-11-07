@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Terminal de estación</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/estacion.css" />
+  </head>
+  <body>
+    <main class="terminal">
+      <header class="cabecera">
+        <h1 id="nombreEstacion">Estación</h1>
+        <span id="estadoEstacion" class="estado"></span>
+      </header>
+
+      <section class="lector" aria-live="polite">
+        <svg class="icono-nfc" viewBox="0 0 64 64" role="img" aria-label="Lector NFC">
+          <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+            <path d="M20 18c6 8 6 20 0 28" />
+            <path d="M29 12c9 11 9 29 0 40" />
+            <path d="M38 6c12 14 12 38 0 52" />
+          </g>
+        </svg>
+        <p id="mensajeLector" class="mensaje">Acerque su tarjeta</p>
+        <p id="detalleLector" class="detalle"></p>
+        <input
+          id="campoUid"
+          class="campo-uid"
+          type="text"
+          autocomplete="off"
+          autocapitalize="characters"
+          spellcheck="false"
+          autofocus
+          aria-label="UID de la tarjeta"
+          placeholder="UID de la tarjeta"
+        />
+      </section>
+
+      <section class="anclajes">
+        <h2>Anclajes</h2>
+        <p id="avisoCarga" class="aviso" hidden></p>
+        <ul id="listaAnclajes" class="lista-anclajes"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="/estacion.js"></script>
+  </body>
+</html>
