@@ -26,12 +26,12 @@ function normalizarUid(texto) {
   return texto.replace(/[\s:-]/g, "").toUpperCase();
 }
 
-function mostrarMensaje(texto, tipo, detalle = "") {
+function mostrarMensaje(texto, tipo, detalle = "", duracion = REPOSO_MS) {
   clearTimeout(temporizadorReposo);
   mensajeLector.textContent = texto;
   mensajeLector.className = `mensaje mensaje--${tipo}`;
   detalleLector.textContent = detalle;
-  temporizadorReposo = setTimeout(volverAlReposo, REPOSO_MS);
+  temporizadorReposo = setTimeout(volverAlReposo, duracion);
 }
 
 function volverAlReposo() {
@@ -40,25 +40,62 @@ function volverAlReposo() {
   detalleLector.textContent = "";
 }
 
-// Qué haría el toque según el estado físico simulado (temporal, solo para el paso 2)
-function accionPrevista() {
-  const anclaje = anclajes.find((a) => a.numero === seleccionado);
-  if (!anclaje) return "Devolución sin anclaje";
-  if (anclaje.estado === "OCUPADO") return `Retiro en el anclaje ${anclaje.numero}`;
-  return encajados.has(anclaje.numero)
-    ? `Devolución en el anclaje ${anclaje.numero}, bloqueo detectado`
-    : `Devolución en el anclaje ${anclaje.numero}, sin bloqueo detectado`;
+let procesando = false; // evita enviar dos lecturas a la vez
+const pesos = new Intl.NumberFormat("es-CO", { maximumFractionDigits: 0 });
+
+async function enviar(ruta, cuerpo) {
+  const respuesta = await fetch(`/estaciones/${estacionId}/${ruta}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(cuerpo),
+  });
+  const datos = await respuesta.json().catch(() => ({}));
+  return { ok: respuesta.ok, datos };
 }
 
-function procesarLectura(texto) {
+// Los textos vienen del backend (exactos de las HU). Si un código no tiene texto, se muestra el código
+function mostrarError(datos) {
+  mostrarMensaje(datos.mensaje ?? "Operación no completada", "error", datos.mensaje ? "" : (datos.error ?? ""));
+}
+
+async function retirar(uid, anclaje) {
+  const { ok, datos } = await enviar("retiros", { anclaje: anclaje.numero, uid });
+  if (!ok) return mostrarError(datos);
+  mostrarMensaje(datos.mensaje, "ok", `Minutos incluidos en su plan: ${datos.minutosIncluidos}`, 8000);
+}
+
+async function devolver(uid, anclaje) {
+  const cuerpo = anclaje
+    ? { anclaje: anclaje.numero, uid, bloqueoDetectado: encajados.has(anclaje.numero) }
+    : { uid, bloqueoDetectado: false };
+  const { ok, datos } = await enviar("devoluciones", cuerpo);
+  if (!ok) return mostrarError(datos);
+  const r = datos.resumen;
+  const resumen =
+    `${r.origen} → ${r.destino} · ${r.duracionMin} min · exceso ${r.minutosExceso} min · ` +
+    `cobrado $${pesos.format(r.valorCobrado)}`;
+  mostrarMensaje(datos.mensaje, "ok", datos.aviso ? `${resumen}. ${datos.aviso}` : resumen, 10000);
+}
+
+// La acción la decide el estado del anclaje: ocupado = retiro, libre o ninguno = devolución
+async function procesarLectura(texto) {
   const uid = normalizarUid(texto);
-  // Si la lectura no es válida, el terminal responde sin llamar al backend
   if (!FORMATO_UID.test(uid)) {
     mostrarMensaje(MENSAJE_LECTURA_FALLIDA, "error");
     return;
   }
-  // Paso 2: solo se muestra la lectura. Los retiros y devoluciones se conectan después.
-  mostrarMensaje(`UID leído: ${uid}`, "ok", accionPrevista());
+  if (procesando) return;
+  procesando = true;
+  try {
+    const anclaje = anclajes.find((a) => a.numero === seleccionado);
+    if (anclaje?.estado === "OCUPADO") await retirar(uid, anclaje);
+    else await devolver(uid, anclaje);
+  } catch {
+    mostrarMensaje("No se pudo comunicar con el sistema", "error");
+  } finally {
+    procesando = false;
+    cargarAnclajes(); // el panel refleja el nuevo estado sin esperar los 5 s
+  }
 }
 
 function crearBoton(texto, alHacerClic, activo = false) {
