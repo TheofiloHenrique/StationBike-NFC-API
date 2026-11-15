@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Terminal de estación</title>
+    <title>Terminal de estación — StationBike</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/estacion.css" />
@@ -19,31 +19,86 @@
         <span id="estadoEstacion" class="estado"></span>
       </header>
 
-      <section class="lector" aria-live="polite">
-        <svg class="icono-nfc" viewBox="0 0 64 64" role="img" aria-label="Lector NFC">
-          <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
-            <path d="M20 18c6 8 6 20 0 28" />
-            <path d="M29 12c9 11 9 29 0 40" />
-            <path d="M38 6c12 14 12 38 0 52" />
-          </g>
-        </svg>
-        <p id="mensajeLector" class="mensaje">Acerque su tarjeta</p>
-        <p id="detalleLector" class="detalle"></p>
-        <input
-          id="campoUid"
-          class="campo-uid"
-          type="text"
-          autocomplete="off"
-          autocapitalize="characters"
-          spellcheck="false"
-          autofocus
-          aria-label="UID de la tarjeta"
-          placeholder="UID de la tarjeta"
-        />
+      <!-- Tarjeta Kiosko Oficial StationBike (Diseño Réplica) -->
+      <section class="tarjeta-kiosko" aria-live="polite">
+        <!-- Esfera y ondas NFC en esquina inferior izquierda -->
+        <div class="kiosko-decoracion-nfc" aria-hidden="true">
+          <svg viewBox="0 0 360 360" class="svg-kiosko-nfc">
+            <defs>
+              <linearGradient id="gradienteNfc" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00833a" />
+                <stop offset="60%" stop-color="#009845" />
+                <stop offset="100%" stop-color="#00ab4e" />
+              </linearGradient>
+            </defs>
+            <!-- Domo verde en esquina inferior izquierda -->
+            <path d="M 0 20 A 340 340 0 0 1 340 360 L 0 360 Z" fill="url(#gradienteNfc)" />
+            <!-- Arco reflectivo sutil verde claro -->
+            <path d="M 0 65 A 295 295 0 0 1 295 360" stroke="#5fd34a" stroke-width="3" fill="none" opacity="0.45" />
+            <!-- 3 ondas blancas concéntricas estilo NFC (convexas hacia el centro/arriba-derecha) -->
+            <!-- Onda exterior (más grande) -->
+            <path d="M 78 185 A 195 195 0 0 1 175 282" stroke="#ffffff" stroke-width="14" stroke-linecap="round" fill="none" />
+            <!-- Onda media -->
+            <path d="M 48 222 A 148 148 0 0 1 138 312" stroke="#ffffff" stroke-width="14" stroke-linecap="round" fill="none" />
+            <!-- Onda interior (más pequeña) -->
+            <path d="M 24 260 A 102 102 0 0 1 100 336" stroke="#ffffff" stroke-width="14" stroke-linecap="round" fill="none" />
+          </svg>
+        </div>
+
+        <!-- Contenido principal de la tarjeta -->
+        <div class="kiosko-cuerpo">
+          <!-- Logo oficial StationBike en esquina superior derecha -->
+          <div class="kiosko-logo">
+            <img src="/logo-stationbike.png" alt="StationBike Logo" class="img-logo-sb" />
+          </div>
+
+          <!-- Panel derecho con textos, input interactivo y lema -->
+          <div class="kiosko-panel-derecho">
+            <!-- Textos oficiales del diseño -->
+            <div class="kiosko-textos">
+              <h2 class="kiosko-titulo">
+                <span class="kiosko-titulo-negro">Acerca tu</span>
+                <span class="kiosko-titulo-verde">tarjeta NFC</span>
+              </h2>
+              <p class="kiosko-subtitulo">y libera tu bici</p>
+            </div>
+
+            <!-- Campo interactivo UID de la tarjeta (conservado para el lector/simulador) -->
+            <div class="kiosko-interaccion">
+              <div class="kiosko-input-contenedor">
+                <input
+                  id="campoUid"
+                  class="campo-uid"
+                  type="text"
+                  autocomplete="off"
+                  autocapitalize="characters"
+                  spellcheck="false"
+                  autofocus
+                  aria-label="UID de la tarjeta"
+                  placeholder="UID de la tarjeta"
+                />
+              </div>
+
+              <!-- Feedback y mensajes del lector -->
+              <div class="kiosko-retroalimentacion">
+                <p id="mensajeLector" class="mensaje">Acerque su tarjeta</p>
+                <p id="detalleLector" class="detalle"></p>
+              </div>
+            </div>
+
+            <!-- Lema inferior oficial -->
+            <div class="kiosko-tagline">
+              <span>MUÉVETE POR TUNJA</span>
+            </div>
+          </div>
+        </div>
       </section>
 
+      <!-- Bahía de Anclajes de la Estación -->
       <section class="anclajes">
-        <h2>Anclajes</h2>
+        <div class="anclajes-cabecera">
+          <h2>Bahía de Anclajes de la Estación</h2>
+        </div>
         <p id="avisoCarga" class="aviso" hidden></p>
         <ul id="listaAnclajes" class="lista-anclajes"></ul>
       </section>

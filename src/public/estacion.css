@@ -1,216 +1,654 @@
-/* Terminal de estación: página fuera del front React, con su propia paleta */
+/* =====================================================================
+   Terminal de Estación NFC — Réplica Visual Oficial StationBike
+   ===================================================================== */
 :root {
-    --negro: #050607;
-    --verde-oscuro: #153019;
-    --fondo: #f0ffe3;
-    --verde: #5fd34a;
-    --blanco: #ffffff;
-    /* Provisional: copiar el valor de --color-error-* del index.css del front */
-    --error: #e5484d;
-  
-    --espacio-1: 0.25rem;
-    --espacio-2: 0.5rem;
-    --espacio-3: 0.75rem;
-    --espacio-4: 1rem;
-    --espacio-5: 1.5rem;
-    --espacio-6: 2rem;
-    --radio-s: 0.5rem;
-    --radio-m: 0.75rem;
+  --negro: #050607;
+  --verde-oscuro: #153019;
+  --fondo: #f0ffe3;
+  --verde: #009845;
+  --verde-vivo: #5fd34a;
+  --blanco: #ffffff;
+  --gris-oscuro: #0f172a;
+  --gris-texto: #334155;
+  --gris-tagline: #475569;
+  --error: #ef4444;
+
+  --espacio-1: 0.25rem;
+  --espacio-2: 0.5rem;
+  --espacio-3: 0.75rem;
+  --espacio-4: 1rem;
+  --espacio-5: 1.5rem;
+  --espacio-6: 2rem;
+  --radio-s: 0.5rem;
+  --radio-m: 0.75rem;
+  --radio-l: 1.25rem;
+  --radio-kiosko: 1.75rem;
+  --radio-pastilla: 1.5rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 0%, #153019 0%, #050607 70%);
+  background-attachment: fixed;
+  color: var(--blanco);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.terminal {
+  display: grid;
+  gap: var(--espacio-5);
+  max-width: 66rem;
+  margin: 0 auto;
+  padding: var(--espacio-5) var(--espacio-4);
+}
+
+/* ---------------------------------------------------------------------
+   Cabecera de la Estación
+   --------------------------------------------------------------------- */
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-3);
+}
+
+.cabecera h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.estado {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  padding: 0.3rem 0.85rem;
+  background: rgba(95, 211, 74, 0.15);
+  border: 1.5px solid var(--verde-vivo);
+  border-radius: var(--radio-pastilla);
+  color: var(--verde-vivo);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.estado::before {
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--verde-vivo);
+  box-shadow: 0 0 8px var(--verde-vivo);
+}
+
+.estado--inactiva {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--fondo);
+}
+
+.estado--inactiva::before {
+  background: #a1a1aa;
+  box-shadow: none;
+}
+
+/* =====================================================================
+   Tarjeta Kiosko Oficial StationBike (Réplica exacta y responsiva)
+   ===================================================================== */
+.tarjeta-kiosko {
+  position: relative;
+  background: #ffffff;
+  border: 4px solid var(--verde);
+  border-radius: var(--radio-kiosko);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 2px 10px rgba(0, 152, 69, 0.2);
+  overflow: hidden;
+  color: var(--negro);
+  min-height: 24rem;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 58rem;
+  margin: 0 auto;
+  transition: all 0.25s ease;
+}
+
+/* Esfera con ondas NFC en esquina inferior izquierda - siempre proporcional */
+.kiosko-decoracion-nfc {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 38%;
+  max-width: 22rem;
+  min-width: 9rem;
+  aspect-ratio: 1;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.svg-kiosko-nfc {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Contenedor de contenido a la derecha - NUNCA invade el domo verde */
+.kiosko-cuerpo {
+  position: relative;
+  z-index: 2;
+  width: 60%;
+  margin-left: auto;
+  padding: clamp(1.25rem, 2.5vw, 2.25rem) clamp(1.25rem, 3vw, 2.75rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+  min-height: 24rem;
+  box-sizing: border-box;
+}
+
+/* Logo oficial StationBike en esquina superior derecha */
+.kiosko-logo {
+  display: flex;
+  justify-content: flex-end;
+  align-self: flex-end;
+  margin-bottom: clamp(0.25rem, 1vw, 0.65rem);
+  width: 100%;
+}
+
+.img-logo-sb {
+  height: clamp(2.2rem, 4.5vw, 4rem);
+  width: auto;
+  max-width: 12rem;
+  object-fit: contain;
+  display: block;
+}
+
+/* Panel derecho que alinea todo el contenido a la izquierda */
+.kiosko-panel-derecho {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: clamp(0.5rem, 1.2vw, 1rem);
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* Bloque de títulos oficiales con tipografía fluida clamp() */
+.kiosko-textos {
+  margin: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.kiosko-titulo {
+  margin: 0;
+  font-size: clamp(1.35rem, 3.2vw, 2.85rem);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.kiosko-titulo-negro {
+  color: var(--gris-oscuro);
+  display: block;
+  white-space: nowrap;
+}
+
+.kiosko-titulo-verde {
+  color: var(--verde);
+  display: block;
+  white-space: nowrap;
+}
+
+.kiosko-subtitulo {
+  margin: clamp(0.25rem, 0.6vw, 0.45rem) 0 0;
+  font-size: clamp(0.9rem, 1.8vw, 1.4rem);
+  font-weight: 700;
+  color: var(--gris-texto);
+  letter-spacing: -0.015em;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* Bloque interactivo del campo UID */
+.kiosko-interaccion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 24rem;
+  margin: 0.25rem 0;
+}
+
+.kiosko-input-contenedor {
+  width: 100%;
+}
+
+.campo-uid {
+  width: 100%;
+  padding: clamp(0.6rem, 1.2vw, 0.85rem) clamp(0.75rem, 1.8vw, 1.25rem);
+  border: 2px solid var(--verde);
+  border-radius: var(--radio-m);
+  background: var(--negro);
+  color: var(--blanco);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-align: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  box-sizing: border-box;
+}
+
+.campo-uid::placeholder {
+  color: #94a3b8;
+  opacity: 0.95;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  letter-spacing: normal;
+}
+
+.campo-uid:focus {
+  outline: none;
+  border-color: #00b352;
+  box-shadow: 0 0 0 3.5px rgba(0, 152, 69, 0.4), 0 6px 18px rgba(0, 0, 0, 0.3);
+  background: #000000;
+}
+
+/* Mensajes de respuesta y feedback */
+.kiosko-retroalimentacion {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  min-height: 1.4rem;
+}
+
+.mensaje {
+  margin: 0;
+  font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+  font-weight: 700;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.mensaje--ok {
+  background: #ecfdf5;
+  border: 1.5px solid var(--verde);
+  color: var(--verde);
+  padding: 0.35rem 0.85rem;
+  border-radius: 0.5rem;
+  font-weight: 800;
+  box-shadow: 0 3px 10px rgba(0, 152, 69, 0.2);
+}
+
+.mensaje--error {
+  background: #fef2f2;
+  border: 1.5px solid #ef4444;
+  color: #b91c1c;
+  padding: 0.35rem 0.85rem;
+  border-radius: 0.5rem;
+  font-weight: 800;
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.2);
+}
+
+.detalle {
+  margin: 0.25rem 0 0;
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  font-weight: 600;
+  color: var(--verde);
+}
+
+/* Lema MUÉVETE POR TUNJA */
+.kiosko-tagline {
+  margin-top: clamp(0.35rem, 1vw, 0.75rem);
+  font-size: clamp(0.7rem, 1.2vw, 0.875rem);
+  font-weight: 800;
+  letter-spacing: clamp(0.12em, 0.3vw, 0.25em);
+  color: var(--gris-tagline);
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------
+   Panel de Anclajes de la Estación
+   --------------------------------------------------------------------- */
+.anclajes {
+  display: grid;
+  gap: var(--espacio-3);
+  margin-top: var(--espacio-3);
+}
+
+.anclajes-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+}
+
+.anclajes h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.aviso {
+  margin: 0;
+  padding: var(--espacio-3);
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid var(--error);
+  border-radius: var(--radio-s);
+  color: var(--error);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.lista-anclajes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: var(--espacio-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Tarjeta individual de anclaje */
+.anclaje {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 1.15rem;
+  border-radius: 1.15rem;
+  background: linear-gradient(160deg, #102315 0%, #07100a 100%);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.anclaje:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+/* Con bicicleta disponible: verde rico y luminoso */
+.anclaje--ocupado {
+  background: linear-gradient(160deg, #132f1a 0%, #091a0e 100%);
+  border-color: rgba(95, 211, 74, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 14px rgba(95, 211, 74, 0.12);
+}
+
+.anclaje--ocupado:hover {
+  border-color: rgba(95, 211, 74, 0.65);
+}
+
+/* Anclaje libre (vacío): tonalidad gris carbón oscuro */
+.anclaje--libre {
+  background: linear-gradient(160deg, #0c120e 0%, #050806 100%);
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Anclaje seleccionado: aura verde brillante */
+.anclaje--seleccionado {
+  border-style: solid !important;
+  border-color: var(--verde-vivo) !important;
+  box-shadow: 0 0 24px rgba(95, 211, 74, 0.5), 0 12px 32px rgba(0, 0, 0, 0.6) !important;
+  transform: translateY(-4px) !important;
+}
+
+/* Cabecera del anclaje */
+.anclaje__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-2);
+}
+
+.anclaje__identificacion {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.anclaje__titulo {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--blanco);
+  letter-spacing: -0.01em;
+}
+
+.anclaje__codigo {
+  color: #94a3b8;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 0.725rem;
+  font-weight: 600;
+}
+
+/* Badges de estado */
+.anclaje__badge {
+  font-size: 0.725rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radio-pastilla);
+  letter-spacing: 0.03em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.anclaje__badge--bici {
+  background: rgba(95, 211, 74, 0.18);
+  border: 1px solid rgba(95, 211, 74, 0.6);
+  color: var(--verde-vivo);
+}
+
+.anclaje__badge--libre {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+}
+
+/* Zona visual central con el dibujo */
+.anclaje__visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 0.5rem 0.65rem;
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  min-height: 6.25rem;
+  gap: 0.45rem;
+}
+
+.anclaje__visual--con-bici {
+  background: linear-gradient(180deg, rgba(95, 211, 74, 0.08) 0%, rgba(0, 0, 0, 0.35) 100%);
+  border-color: rgba(95, 211, 74, 0.25);
+}
+
+.dibujo-bicicleta {
+  width: 5.8rem;
+  height: auto;
+  max-height: 3.6rem;
+  display: block;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+  transition: transform 0.2s ease;
+}
+
+.anclaje:hover .dibujo-bicicleta {
+  transform: scale(1.06);
+}
+
+.dibujo-bahia-vacia {
+  width: 4.8rem;
+  height: auto;
+  max-height: 3.2rem;
+  display: block;
+  opacity: 0.65;
+}
+
+/* Datos de la bicicleta bajo el dibujo */
+.anclaje__bici-datos {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.15rem;
+}
+
+.anclaje__bici-codigo {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--blanco);
+  background: rgba(95, 211, 74, 0.22);
+  border: 1px solid rgba(95, 211, 74, 0.4);
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.375rem;
+}
+
+.anclaje__bici-estado {
+  font-size: 0.725rem;
+  font-weight: 700;
+  color: var(--verde-vivo);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.anclaje__libre-datos {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+/* Botonera de acciones del anclaje */
+.anclaje__acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.boton {
+  min-height: 2.35rem;
+  padding: 0.45rem 0.85rem;
+  border: 1.5px solid rgba(95, 211, 74, 0.6);
+  border-radius: var(--radio-s);
+  background: rgba(5, 6, 7, 0.6);
+  color: var(--blanco);
+  font: inherit;
+  font-size: 0.825rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.boton:hover {
+  background: rgba(95, 211, 74, 0.22);
+  border-color: var(--verde-vivo);
+  color: var(--blanco);
+}
+
+.boton[aria-pressed="true"],
+.boton--acercarse[aria-pressed="true"] {
+  background: var(--verde-vivo) !important;
+  color: var(--negro) !important;
+  border-color: var(--verde-vivo) !important;
+  font-weight: 900;
+  box-shadow: 0 2px 10px rgba(95, 211, 74, 0.4);
+}
+
+.boton--encajar {
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+  color: #cbd5e1;
+  font-size: 0.775rem;
+}
+
+.boton--encajar:hover {
+  border-color: var(--verde-vivo);
+  color: var(--verde-vivo);
+  background: rgba(95, 211, 74, 0.12);
+}
+
+.boton--encajar[aria-pressed="true"] {
+  background: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+.boton:focus-visible {
+  outline: 2px solid var(--verde-vivo);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------
+   Responsividad Móvil (Pantallas muy estrechas < 520px)
+   --------------------------------------------------------------------- */
+@media (max-width: 520px) {
+  .tarjeta-kiosko {
+    min-height: auto;
+    flex-direction: column;
+    padding-bottom: 1.25rem;
   }
-  
-  * {
-    box-sizing: border-box;
+
+  .kiosko-decoracion-nfc {
+    width: 9rem;
+    height: 9rem;
+    bottom: -15px;
+    left: -15px;
+    opacity: 0.22;
   }
-  
-  body {
-    margin: 0;
-    min-height: 100vh;
-    background: var(--negro);
-    color: var(--blanco);
-    font-family: "Inter", system-ui, sans-serif;
+
+  .kiosko-cuerpo {
+    width: 100%;
+    min-height: auto;
+    padding: 1.25rem 1rem 0.5rem;
   }
-  
-  .terminal {
-    display: grid;
-    gap: var(--espacio-5);
-    max-width: 60rem;
-    margin: 0 auto;
-    padding: var(--espacio-5) var(--espacio-4);
+
+  .kiosko-panel-derecho {
+    width: 100%;
+    gap: 0.75rem;
   }
-  
-  .cabecera {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--espacio-3);
+
+  .kiosko-titulo {
+    font-size: 1.65rem;
   }
-  
-  .cabecera h1 {
-    margin: 0;
-    font-size: 1.5rem;
+
+  .kiosko-subtitulo {
+    font-size: 1.05rem;
   }
-  
-  .estado {
-    padding: var(--espacio-1) var(--espacio-3);
-    border: 1px solid var(--verde);
-    border-radius: var(--radio-s);
-    color: var(--verde);
-    font-size: 0.875rem;
-    font-weight: 600;
+
+  .kiosko-interaccion {
+    max-width: 100%;
   }
-  
-  .estado--inactiva {
-    border-style: dashed;
-    color: var(--fondo);
-  }
-  
-  .lector {
-    display: grid;
-    justify-items: center;
-    gap: var(--espacio-3);
-    padding: var(--espacio-6) var(--espacio-4);
-    border-radius: var(--radio-m);
-    background: var(--verde-oscuro);
-    text-align: center;
-  }
-  
-  .icono-nfc {
-    width: 8rem;
-    height: 8rem;
-    color: var(--verde);
-    animation: pulso 2s ease-in-out infinite;
-  }
-  
-  @keyframes pulso {
-    0%,
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.55;
-      transform: scale(0.96);
-    }
-  }
-  
-  .mensaje {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-  }
-  
-  .mensaje--ok {
-    color: var(--verde);
-  }
-  
-  .mensaje--error {
-    color: var(--error);
-  }
-  
-  .detalle {
-    min-height: 1.25rem;
-    margin: 0;
-    color: var(--fondo);
-    font-size: 0.875rem;
-  }
-  
-  .campo-uid {
-    width: min(100%, 22rem);
-    padding: var(--espacio-3);
-    border: 1px solid var(--verde);
-    border-radius: var(--radio-s);
-    background: var(--negro);
-    color: var(--blanco);
-    font-family: ui-monospace, monospace;
-    font-size: 1rem;
-    text-align: center;
-  }
-  
-  .campo-uid::placeholder {
-    color: var(--fondo);
-  }
-  
-  .campo-uid:focus-visible,
-  .boton:focus-visible {
-    outline: 2px solid var(--fondo);
-    outline-offset: 2px;
-  }
-  
-  .anclajes h2 {
-    margin: 0 0 var(--espacio-3);
-    font-size: 1.125rem;
-  }
-  
-  .aviso {
-    margin: 0 0 var(--espacio-3);
-    color: var(--error);
-    font-weight: 600;
-  }
-  
-  .lista-anclajes {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-    gap: var(--espacio-3);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  
-  .anclaje {
-    display: grid;
-    gap: var(--espacio-2);
-    align-content: start;
-    padding: var(--espacio-4);
-    border: 2px solid transparent;
-    border-radius: var(--radio-m);
-    background: var(--verde-oscuro);
-  }
-  
-  .anclaje--libre {
-    border-style: dashed;
-    border-color: var(--verde-oscuro);
-    background: transparent;
-    outline: 1px solid var(--verde-oscuro);
-  }
-  
-  .anclaje--seleccionado {
-    border-style: solid;
-    border-color: var(--verde);
-  }
-  
-  .anclaje__codigo {
-    color: var(--fondo);
-    font-family: ui-monospace, monospace;
-    font-size: 0.75rem;
-  }
-  
-  .boton {
-    min-height: 2.25rem;
-    padding: var(--espacio-1) var(--espacio-3);
-    border: 1px solid var(--verde);
-    border-radius: var(--radio-s);
-    background: transparent;
-    color: var(--blanco);
-    font: inherit;
-    font-size: 0.875rem;
-    cursor: pointer;
-  }
-  
-  .boton[aria-pressed="true"] {
-    background: var(--verde);
-    color: var(--negro);
-    font-weight: 600;
-  }
-  
-  @media (min-width: 768px) {
-    .terminal {
-      padding: var(--espacio-6);
-    }
-  }
-  
-  @media (prefers-reduced-motion: reduce) {
-    .icono-nfc {
-      animation: none;
-    }
-  }
+}
