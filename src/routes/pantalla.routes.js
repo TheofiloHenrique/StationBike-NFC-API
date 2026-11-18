@@ -6,11 +6,11 @@ const paginaEstacion = fileURLToPath(new URL("../public/estacion.html", import.m
 
 // Al abrir la raíz o /estaciones, se abre directamente el tótem físico de Los Muiscas (#92)
 router.get("/", (req, res) => {
-  res.redirect("/estacion/92");
+  res.redirect("/estacion/1");
 });
 
 router.get("/estaciones", (req, res) => {
-  res.redirect("/estacion/92");
+  res.redirect("/estacion/1");
 });
 
 // Pantalla / tótem físico individual de cada estación
